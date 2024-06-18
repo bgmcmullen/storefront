@@ -1,11 +1,11 @@
 # storefront
 
 **Author**: Brendan McMullen
-**Version**: 1.0.0
+**Version**: 1.0.1
 
 
 ## Overview
-This is a basic template for a store front website with food and electronics products.
+This is a basic template for a store front website with food and electronics products. User can add and remove items from the cart.
 ## Architecture
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",

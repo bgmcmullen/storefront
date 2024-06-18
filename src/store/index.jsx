@@ -6,7 +6,9 @@ import categoriesReducer from './categories';
 
 import productsReducer from './products.jsx';
 
-let reducers = combineReducers({ productsReducer, categoriesReducer });
+import cartReducer from './cart.jsx';
+
+let reducers = combineReducers({ productsReducer, categoriesReducer, cartReducer });
 
 let store = createStore(reducers, composeWithDevTools());
 
