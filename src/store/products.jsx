@@ -1,7 +1,7 @@
 let tv = {
   title: 'TV',
   description: 'Antique CRT Televison',
-  image: '../../../public/pexels-anete-lusina-5721908.jpg',
+  image: '/pexels-anete-lusina-5721908.jpg',
   category: 'electronics',
   price: '$80'
 }
@@ -9,7 +9,7 @@ let tv = {
 let laptop = {
   title: 'Laptop',
   description: 'State of the art laptop computer',
-  image: '',
+  image: '/ales-nesetril-Im7lZjxeLhg-unsplash.jpg',
   category: 'electronics',
   price: '$2000'
 }
@@ -17,7 +17,7 @@ let laptop = {
 let chickpeas = {
   title: 'Chickpeas',
   description: 'Can of chickpeas',
-  image: '',
+  image: '/pexels-moldyfox-106972.jpg',
   category: 'food',
   price: '$0.99'
 }
@@ -25,7 +25,7 @@ let chickpeas = {
 let pizza = {
   title: 'Pizza',
   description: 'Gourmet Italian style thin crust pizza',
-  image: '',
+  image: '/pexels-alena-shekhovtcova-6940997.jpg',
   category: 'food',
   price: '$18'
 }

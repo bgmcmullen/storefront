@@ -1,6 +1,18 @@
+const electronics = {
+  title: "ELECTRONICS",
+  description: 'Top Notch Electronic Products'
+};
+
+const food = {
+  title: "FOOD",
+  description: 'Wholesome Nutritious Foods'
+};
+
+const foodCatagories = {electronics, food};
+
 let initialState = {
-  categories: ['electronics', 'food'],
-  currentCategory: 'electronics'
+  categories: foodCatagories,
+  currentCategory: electronics
 }
 
 
@@ -11,7 +23,7 @@ const categoriesReducer = (state = initialState, action) => {
 
   switch(type) {
     case 'CHANGE_CATEGORY':
-      return { ...state, currentCategory: payload}
+      return { ...state, currentCategory: state.categories[payload]}
     default:
       return state;
   }
