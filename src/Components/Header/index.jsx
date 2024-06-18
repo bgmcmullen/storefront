@@ -1,4 +1,4 @@
-import Cart from '../../Cart/index.jsx';
+import Cart from '../Cart';
 
 function Header() {
 
