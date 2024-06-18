@@ -24,4 +24,4 @@ This is a basic template for a store front website with food and electronics pro
 chatgpt
 
 ## UML Diagram
-![Diagram](UML_Map.png)
+![Diagram](UML_diagram.png)
