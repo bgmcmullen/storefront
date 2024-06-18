@@ -3,7 +3,7 @@ let tv = {
   description: 'Antique CRT Televison',
   image: '/pexels-anete-lusina-5721908.jpg',
   category: 'electronics',
-  price: '$80'
+  price: 80
 }
 
 let laptop = {
@@ -11,7 +11,7 @@ let laptop = {
   description: 'State of the art laptop computer',
   image: '/ales-nesetril-Im7lZjxeLhg-unsplash.jpg',
   category: 'electronics',
-  price: '$2000'
+  price: 2000
 }
 
 let chickpeas = {
@@ -19,7 +19,7 @@ let chickpeas = {
   description: 'Can of chickpeas',
   image: '/pexels-moldyfox-106972.jpg',
   category: 'food',
-  price: '$0.99'
+  price: 1
 }
 
 let pizza = {
@@ -27,7 +27,7 @@ let pizza = {
   description: 'Gourmet Italian style thin crust pizza',
   image: '/pexels-alena-shekhovtcova-6940997.jpg',
   category: 'food',
-  price: '$18'
+  price: 18
 }
 
 let initialState = {

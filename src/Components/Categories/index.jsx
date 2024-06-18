@@ -11,7 +11,7 @@ function Categories() {
 
   return (
     <>
-      <h2>
+      <h2 style={{paddingTop: '90px', margin: 0}}>
         Browse our Categories
       </h2>
       <hr />

@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
@@ -6,11 +6,14 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Masonry from '@mui/lab/Masonry';
+import Button from '@mui/material/Button';
+import { addToCart } from '../../store/cart.jsx';
 
 
 function Products() {
 
   const displayedProducts = useSelector((state) => state.productsReducer.displayedProducts);
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -33,8 +36,9 @@ function Products() {
                     {product.description}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {product.price}
+                    $ {product.price}
                   </Typography>
+                  <Button style={{fontSize:'20px'}} onClick={() => (dispatch(addToCart(product)))}>Add to Cart</Button>
                 </CardContent>
               </Card>
             );
