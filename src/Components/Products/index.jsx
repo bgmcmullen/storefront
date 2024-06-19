@@ -9,11 +9,22 @@ import Masonry from '@mui/lab/Masonry';
 import Button from '@mui/material/Button';
 import { addToCart } from '../../store/cart.jsx';
 
-
 function Products() {
+
+  const productCounts = useSelector((state) => state.cartReducer.productCounts);
 
   const displayedProducts = useSelector((state) => state.productsReducer.displayedProducts);
   const dispatch = useDispatch();
+
+  const handleAddToCart = product => {
+    if(product.inStock - productCounts[product.name] <= 0){
+      alert(`Sorry ${product.name} out of stock.`);
+    } else {
+      dispatch(addToCart(product));
+    }
+  }
+  
+
 
   return (
     <>
@@ -23,7 +34,7 @@ function Products() {
             return (
               <Card key={`card ${index}`}>
                 <CardHeader
-                  title={product.title}
+                  title={product.name}
                 />
                 <CardMedia
                   component="img"
@@ -38,7 +49,10 @@ function Products() {
                   <Typography variant="body2" color="text.secondary">
                     $ {product.price}
                   </Typography>
-                  <Button style={{fontSize:'20px'}} onClick={() => (dispatch(addToCart(product)))}>Add to Cart</Button>
+                  <Typography variant="body2" color="text.secondary">
+                    In Stock: {product.inStock - productCounts[product.name]}
+                  </Typography>
+                  <Button style={{fontSize:'20px'}} onClick={() => handleAddToCart(product)}>Add to Cart</Button>
                 </CardContent>
               </Card>
             );

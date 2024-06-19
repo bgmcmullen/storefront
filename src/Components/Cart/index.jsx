@@ -17,6 +17,19 @@ function Cart() {
 
   const dispatch = useDispatch();
 
+  // referenced chatgpt
+function roundToNearestHundredth(num) {
+  return Math.round(num * 100) / 100;
+}
+
+const handleAddToCart = product => {
+  if(product.inStock - productCounts[product.name] <= 0){
+    alert(`Sorry ${product.name} out of stock.`);
+  } else {
+    dispatch(addToCart(product));
+  }
+}
+
   return (
     <>
       <PopupState variant="popover" style={{ width: '50px' }}>
@@ -31,20 +44,20 @@ function Cart() {
                   <div key={index}>
                     <div key={index} style={{ width: '150px', padding: '5px' }}>
                       <h3 style={{ margin: 0 }}>
-                        {product.title}
+                        {product.name}
                       </h3>
                       <Typography variant="body2" color="text.secondary">
-                        price: $ {product.price * productCounts[product.title]}
+                        price: $ {roundToNearestHundredth(product.price * productCounts[product.name])}
                       </Typography>
                       <button onClick={() => (dispatch(deleteFromCart(product)))}>-</button>
-                      <p style={{ display: 'inline', margin: 0, padding: 0 }}> Quantity: {productCounts[product.title]} </p>
-                      <button onClick={() => (dispatch(addToCart(product)))}>+</button>
+                      <p style={{ display: 'inline', margin: 0, padding: 0 }}> Quantity: {productCounts[product.name]} </p>
+                      <button onClick={() => handleAddToCart(product)}>+</button>
                     </div>
                     <hr />
                   </div>
                 );
               })}
-              <h3>Total: $ {cartReducer.totalCost}</h3>
+              <h3 style={{paddingLeft: '10px', paddingRight: '10px',}}>Total: $ {cartReducer.totalCost}</h3>
             </Menu>
           </>
         )}

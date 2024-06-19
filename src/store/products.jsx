@@ -1,38 +1,44 @@
+import axios from 'axios'
+
 let tv = {
-  title: 'TV',
+  name: 'TV',
   description: 'Antique CRT Televison',
   image: '/pexels-anete-lusina-5721908.jpg',
   category: 'electronics',
-  price: 80
+  price: 79.99,
+  inStock: 5
 }
 
 let laptop = {
-  title: 'Laptop',
+  name: 'Laptop',
   description: 'State of the art laptop computer',
   image: '/ales-nesetril-Im7lZjxeLhg-unsplash.jpg',
   category: 'electronics',
-  price: 2000
+  price: 1999.99,
+  inStock: 6
 }
 
 let chickpeas = {
-  title: 'Chickpeas',
+  name: 'Chickpeas',
   description: 'Can of chickpeas',
   image: '/pexels-moldyfox-106972.jpg',
   category: 'food',
-  price: 1
+  price: .99,
+  inStock: 867
 }
 
 let pizza = {
-  title: 'Pizza',
+  name: 'Pizza',
   description: 'Gourmet Italian style thin crust pizza',
   image: '/pexels-alena-shekhovtcova-6940997.jpg',
   category: 'food',
-  price: 18
+  price: 17.99,
+  inStock: 13
 }
 
 let initialState = {
-  products: [tv, laptop, chickpeas, pizza],
-  displayedProducts: [tv, laptop]
+  products: [],
+  displayedProducts: []
 }
 
 const filterProducts = (state, category) => {
@@ -42,13 +48,15 @@ const filterProducts = (state, category) => {
 
 const productsReducer = (state = initialState, action) => {
 
-  let {type, payload } = action;
+  let { type, payload } = action;
   let filteredProducts = null;
 
-  switch(type) {
+  switch (type) {
     case 'CHANGE_CATEGORY':
       filteredProducts = filterProducts(state, payload);
-      return { ...state, displayedProducts: filteredProducts}
+      return { ...state, displayedProducts: filteredProducts }
+    case 'FETCH_PRODUCTS':
+      return { ...state, products: payload };
     default:
       return state;
   }
@@ -62,4 +70,40 @@ export function changeCategory(category) {
     type: 'CHANGE_CATEGORY',
     payload: category
   }
+}
+
+export const fetchData = () => async (dispatch) => {
+
+  try {
+    const productsResponse = await axios.get('http://localhost:3005/api/v1/products/');
+    const products = productsResponse.data;
+    const fetchProductsObject = {
+      type: 'FETCH_PRODUCTS',
+      payload: products
+    }
+  
+    dispatch(fetchProductsObject);
+  } catch (error) {
+    console.error(error);
+  }
+
+
+try{
+  const cartResponse = await axios.get('http://localhost:3005/api/v1/cart/');
+  const cart = cartResponse.data[cartResponse.data.length - 1];
+
+  const fetchCartObject = {
+    type: 'FETCH_CART',
+    payload: cart
+  }
+
+  dispatch(fetchCartObject);
+} catch(error) {
+  console.error(error)
+}
+  const changeCategoryObject = {
+    type: 'CHANGE_CATEGORY',
+    payload: 'electronics'
+  }
+  dispatch(changeCategoryObject);
 }

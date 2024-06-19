@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 let initialState = {
   products: [],
   totalCost: 0,
@@ -11,7 +13,7 @@ const handleAddToCart = (state, payload) => {
   let isNew = true;
 
   state.products.map((product) => {
-    if (product.title === payload.title) {
+    if (product.name === payload.name) {
       isNew = false;
     }
   });
@@ -19,19 +21,19 @@ const handleAddToCart = (state, payload) => {
   let productCounts = { ...state.productCounts };
 
   if (isNew) {
-    productCounts[payload.title] = 1
+    productCounts[payload.name] = 1
     newState = {
       products: [...state.products, payload],
-      totalCost: state.totalCost + payload.price,
+      totalCost: roundToNearestHundredth(state.totalCost + payload.price),
       totalItems: ++state.totalItems,
       productCounts: productCounts
     };
   }
   if (!isNew) {
-    productCounts[payload.title]++
+    productCounts[payload.name]++
     newState = {
       ...state,
-      totalCost: state.totalCost + payload.price,
+      totalCost: roundToNearestHundredth(state.totalCost + payload.price),
       totalItems: ++state.totalItems,
       productCounts: productCounts
     };
@@ -48,7 +50,7 @@ const handleDeleteFromCart = (state, payload) => {
 
   // check if item is in cart
   state.products.map((product) => {
-    if (product.title === payload.title) {
+    if (product.name === payload.name) {
       contains = true
     }
   });
@@ -59,12 +61,12 @@ const handleDeleteFromCart = (state, payload) => {
 
   let productCounts = { ...state.productCounts };
 
-  productCounts[payload.title]--
+  productCounts[payload.name]--
 
   let products = null;
 
-  if(productCounts[payload.title] <= 0){
-    products = state.products.filter((product) => (product.title !== payload.title));
+  if(productCounts[payload.name] <= 0){
+    products = state.products.filter((product) => (product.name !== payload.name));
   } else {
     products = [...state.products];
   }
@@ -72,12 +74,17 @@ const handleDeleteFromCart = (state, payload) => {
 
   newState = {
     products: products,
-    totalCost: state.totalCost - payload.price,
+    totalCost: roundToNearestHundredth(state.totalCost - payload.price),
     totalItems: --state.totalItems,
     productCounts: productCounts
   };
 
   return newState;
+}
+
+// referenced chatgpt
+function roundToNearestHundredth(num) {
+  return Math.round(num * 100) / 100;
 }
 
 const cartReducer = (state = initialState, action) => {
@@ -86,9 +93,11 @@ const cartReducer = (state = initialState, action) => {
 
   switch (type) {
     case 'ADD_TO_CART':
-      return handleAddToCart(state, payload);
-    case 'Delete_FROM_CART':
-      return handleDeleteFromCart(state, payload);
+      return payload;
+    case 'DELETE_FROM_CART':
+      return payload;
+    case 'FETCH_CART':
+      return payload; 
     default:
       return state;
   }
@@ -96,16 +105,54 @@ const cartReducer = (state = initialState, action) => {
 
 export default cartReducer;
 
-export function addToCart(product) {
-  return {
-    type: 'ADD_TO_CART',
-    payload: product
+const updateDatabase = async (newState) => {
+
+  // check if the cart object is in database 
+  const res = await axios.get('http://localhost:3005/api/v1/cart/');
+
+  const dataArrayLength = res.data.length
+
+  try{
+    if(dataArrayLength > 0) {
+      const latestID = res.data[dataArrayLength - 1].id
+      await axios.put(`http://localhost:3005/api/v1/cart/${latestID}`, newState);
+    } else {
+      await axios.post(`http://localhost:3005/api/v1/cart/`, newState);
+    }
+  } catch (error) {
+    console.error(error);
   }
+
+
+
 }
 
-export function deleteFromCart(product) {
-  return {
-    type: 'Delete_FROM_CART',
-    payload: product
+export const addToCart = (product) => async (dispatch, getState) => {
+
+  const state = getState().cartReducer;
+
+  const newState = handleAddToCart(state, product)
+
+  updateDatabase(newState);
+
+  const actionObject =  {
+    type: 'ADD_TO_CART',
+    payload: newState
   }
+  dispatch(actionObject);
+}
+
+export const  deleteFromCart = (product) => async (dispatch, getState) =>  {
+
+  const state = getState().cartReducer;
+
+  const newState = handleDeleteFromCart(state, product);
+
+  updateDatabase(newState);
+
+  const actionObject = {
+    type: 'DELETE_FROM_CART',
+    payload: newState
+  }
+  dispatch(actionObject);
 }
