@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+
+
 let initialState = {
   products: [],
   totalCost: 0,
@@ -107,17 +109,19 @@ export default cartReducer;
 
 const updateDatabase = async (newState) => {
 
+  const URL = import.meta.env.VITE_URL
+
   // check if the cart object is in database 
-  const res = await axios.get('http://localhost:3005/api/v1/cart/');
+  const res = await axios.get(`${URL}/api/v1/cart/`);
 
   const dataArrayLength = res.data.length
 
   try{
     if(dataArrayLength > 0) {
       const latestID = res.data[dataArrayLength - 1].id
-      await axios.put(`http://localhost:3005/api/v1/cart/${latestID}`, newState);
+      await axios.put(`${URL}/api/v1/cart/${latestID}`, newState);
     } else {
-      await axios.post(`http://localhost:3005/api/v1/cart/`, newState);
+      await axios.post(`${URL}/api/v1/cart/`, newState);
     }
   } catch (error) {
     console.error(error);
