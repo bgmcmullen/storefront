@@ -74,33 +74,36 @@ export function changeCategory(category) {
 
 export const fetchData = () => async (dispatch) => {
 
+  const URL = import.meta.env.VITE_URL
+
   try {
-    const productsResponse = await axios.get('http://localhost:3005/api/v1/products/');
+    const productsResponse = await axios.get(`${URL}/api/v1/products/`);
     const products = productsResponse.data;
     const fetchProductsObject = {
       type: 'FETCH_PRODUCTS',
       payload: products
     }
-  
+
     dispatch(fetchProductsObject);
   } catch (error) {
     console.error(error);
   }
 
 
-try{
-  const cartResponse = await axios.get('http://localhost:3005/api/v1/cart/');
-  const cart = cartResponse.data[cartResponse.data.length - 1];
+  try {
+    console.log(`${URL}/api/v1/cart/`);
+    const cartResponse = await axios.get(`${URL}/api/v1/cart/`);
+    const cart = cartResponse.data[cartResponse.data.length - 1];
 
-  const fetchCartObject = {
-    type: 'FETCH_CART',
-    payload: cart
+    const fetchCartObject = {
+      type: 'FETCH_CART',
+      payload: cart
+    }
+
+    dispatch(fetchCartObject);
+  } catch (error) {
+    console.error(error)
   }
-
-  dispatch(fetchCartObject);
-} catch(error) {
-  console.error(error)
-}
   const changeCategoryObject = {
     type: 'CHANGE_CATEGORY',
     payload: 'electronics'

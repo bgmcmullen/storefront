@@ -50,7 +50,7 @@ function Products() {
                     $ {product.price}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    In Stock: {product.inStock - productCounts[product.name]}
+                    In Stock: {productCounts[product.name] ? (product.inStock - productCounts[product.name]) : product.inStock}
                   </Typography>
                   <Button style={{fontSize:'20px'}} onClick={() => handleAddToCart(product)}>Add to Cart</Button>
                 </CardContent>
