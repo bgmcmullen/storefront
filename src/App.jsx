@@ -5,6 +5,7 @@ import Footer from './Components/Footer';
 import './App.scss';
 import { useEffect } from 'react';
 import { fetchData } from './store/products.jsx';
+import { fetchCart } from './store/cart.jsx';
 import { useDispatch } from 'react-redux';
 
 function App(){
@@ -13,6 +14,7 @@ function App(){
 
   useEffect(() => {
     dispatch(fetchData());
+    dispatch(fetchCart());
   }, []);
 
   return(
