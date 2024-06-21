@@ -1,111 +1,72 @@
 import axios from 'axios';
-
-
-
-let initialState = {
-  products: [],
-  totalCost: 0,
-  totalItems: 0,
-  productCounts: {}
-}
-
-const handleAddToCart = (state, payload) => {
-
-  let newState = null
-  let isNew = true;
-
-  state.products.map((product) => {
-    if (product.name === payload.name) {
-      isNew = false;
-    }
-  });
-
-  let productCounts = { ...state.productCounts };
-
-  if (isNew) {
-    productCounts[payload.name] = 1
-    newState = {
-      products: [...state.products, payload],
-      totalCost: roundToNearestHundredth(state.totalCost + payload.price),
-      totalItems: ++state.totalItems,
-      productCounts: productCounts
-    };
-  }
-  if (!isNew) {
-    productCounts[payload.name]++
-    newState = {
-      ...state,
-      totalCost: roundToNearestHundredth(state.totalCost + payload.price),
-      totalItems: ++state.totalItems,
-      productCounts: productCounts
-    };
-  }
-
-  return newState;
-}
-
-const handleDeleteFromCart = (state, payload) => {
-
-  let newState = null;
-
-  let contains = false;
-
-  // check if item is in cart
-  state.products.map((product) => {
-    if (product.name === payload.name) {
-      contains = true
-    }
-  });
-
-  if (!contains) {
-    return state;
-  }
-
-  let productCounts = { ...state.productCounts };
-
-  productCounts[payload.name]--
-
-  let products = null;
-
-  if(productCounts[payload.name] <= 0){
-    products = state.products.filter((product) => (product.name !== payload.name));
-  } else {
-    products = [...state.products];
-  }
-
-
-  newState = {
-    products: products,
-    totalCost: roundToNearestHundredth(state.totalCost - payload.price),
-    totalItems: --state.totalItems,
-    productCounts: productCounts
-  };
-
-  return newState;
-}
+import { createSlice } from '@reduxjs/toolkit';
 
 // referenced chatgpt
 function roundToNearestHundredth(num) {
   return Math.round(num * 100) / 100;
 }
 
-const cartReducer = (state = initialState, action) => {
+export const cartSlice = createSlice({
+  name: 'cart',
+  initialState: {
+    products: [],
+    totalCost: 0,
+    totalItems: 0,
+    productCounts: {}
+  },
+  reducers: {
+    ADD_TO_CART: (state, action) => {
+      let isNew = true;
 
-  let { type, payload } = action;
+      state.products.map((product) => {
+        if (product.name === action.payload.name) {
+          isNew = false;
+        }
+      });
 
-  switch (type) {
-    case 'ADD_TO_CART':
-      return payload;
-    case 'DELETE_FROM_CART':
-      return payload;
-    case 'FETCH_CART':
-      return payload; 
-    default:
-      return state;
+      if (isNew) {
+        state.productCounts[action.payload.name] = 1;
+        state.products = [...state.products, action.payload];
+        state.totalCost = roundToNearestHundredth(state.totalCost + action.payload.price);
+        state.totalItems = state.totalItems + 1;
+      }
+      if (!isNew) {
+        state.productCounts[action.payload.name]++;
+          state.totalCost= roundToNearestHundredth(state.totalCost + action.payload.price);
+          state.totalItems++;
+      }
+      updateDatabase(JSON.stringify(state));
+    },
+    DELETE_FROM_CART: (state, action) => {
+      let contains = false;
+      // check if item is in cart
+      state.products.map((product) => {
+        if (product.name === action.payload.name) {
+          contains = true
+        }
+      });
+      if (!contains) {
+        return state;
+      }
+      if (state.productCounts[action.payload.name] <= 0) {
+        state.products = state.products.filter((product) => (product.name !== action.payload.name));
+      }
+      state.productCounts[action.payload.name]--
+      state.totalCost = roundToNearestHundredth(state.totalCost - action.payload.price),
+      state.totalItems--
+      updateDatabase(JSON.stringify(state));
+    },
+    FETCH_CART: (state, action) => {
+      state.productCounts = action.payload.productCounts
+      state.products = action.payload.products;
+      state.totalCost = action.payload.totalCost;
+      state.totalItems = action.payload.totalItems;
+      
+    }
   }
-}
+});
 
-export default cartReducer;
+export default cartSlice.reducer;
 
 const updateDatabase = async (newState) => {
 
@@ -116,47 +77,47 @@ const updateDatabase = async (newState) => {
 
   const dataArrayLength = res.data.length
 
-  try{
-    if(dataArrayLength > 0) {
+  try {
+    if (dataArrayLength > 0) {
       const latestID = res.data[dataArrayLength - 1].id
-      await axios.put(`${URL}/api/v1/cart/${latestID}`, newState);
+      await axios.put(`${URL}/api/v1/cart/${latestID}`, JSON.parse(newState));
     } else {
-      await axios.post(`${URL}/api/v1/cart/`, newState);
+      await axios.post(`${URL}/api/v1/cart/`, JSON.parse(newState));
     }
   } catch (error) {
     console.error(error);
   }
 
-
-
 }
 
-export const addToCart = (product) => async (dispatch, getState) => {
+export const addToCart = (product) => async (dispatch) => {
 
-  const state = getState().cartReducer;
 
-  const newState = handleAddToCart(state, product)
-
-  updateDatabase(newState);
-
-  const actionObject =  {
-    type: 'ADD_TO_CART',
-    payload: newState
-  }
-  dispatch(actionObject);
+  dispatch(ADD_TO_CART(product));
 }
 
-export const  deleteFromCart = (product) => async (dispatch, getState) =>  {
+export const { ADD_TO_CART, DELETE_FROM_CART, FETCH_CART } = cartSlice.actions;
 
-  const state = getState().cartReducer;
+export const deleteFromCart = (product) => async (dispatch) => {
 
-  const newState = handleDeleteFromCart(state, product);
+  dispatch(DELETE_FROM_CART(product));
+}
 
-  updateDatabase(newState);
+export const fetchCart = () => async (dispatch) => {
 
-  const actionObject = {
-    type: 'DELETE_FROM_CART',
-    payload: newState
+
+  const URL = import.meta.env.VITE_URL
+
+  try {
+    const cartResponse = await axios.get(`${URL}/api/v1/cart/`);
+    const cart = cartResponse.data[cartResponse.data.length - 1];
+
+    console.log(cart);
+
+    dispatch(FETCH_CART(cart));
+
+
+  } catch (error) {
+    console.error(error)
   }
-  dispatch(actionObject);
 }

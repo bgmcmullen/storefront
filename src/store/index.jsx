@@ -1,7 +1,6 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import {thunk} from 'redux-thunk';
+import { combineReducers } from 'redux';
 
-import { composeWithDevTools } from '@redux-devtools/extension';
+import { configureStore } from  '@reduxjs/toolkit';
 
 import categoriesReducer from './categories';
 
@@ -11,6 +10,8 @@ import cartReducer from './cart.jsx';
 
 let reducers = combineReducers({ productsReducer, categoriesReducer, cartReducer });
 
-let store = createStore(reducers, composeWithDevTools(), applyMiddleware(thunk));
+const store = configureStore({
+  reducer: reducers
+});
 
 export default store;
