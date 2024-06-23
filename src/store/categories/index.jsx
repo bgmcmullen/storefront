@@ -1,3 +1,5 @@
+import { createSlice } from '@reduxjs/toolkit';
+
 const electronics = {
   title: "ELECTRONICS",
   description: 'Top Notch Electronic Products'
@@ -16,24 +18,20 @@ let initialState = {
 }
 
 
+export const categoriesSlice = createSlice({
+  name: 'categories',
+  initialState: {
+    categories: foodCatagories,
+    currentCategory: electronics
+  },
+  reducers: {
+    changeCategoryHeading: (state, action) => {
+      state.currentCategory = state.categories[action.payload]
+    }
 
-const categoriesReducer = (state = initialState, action) => {
-
-  let {type, payload } = action;
-
-  switch(type) {
-    case 'CHANGE_CATEGORY':
-      return { ...state, currentCategory: state.categories[payload]}
-    default:
-      return state;
   }
-}
+});
 
-export default categoriesReducer;
+export const { changeCategoryHeading } = categoriesSlice.actions;
 
-export function changeCategory(category) {
-  return {
-    type: 'CHANGE_CATEGORY',
-    payload: category
-  }
-}
+export default categoriesSlice.reducer;

@@ -31,8 +31,6 @@ function Cart() {
     }
   }
 
-  console.log(productsInCart);
-
   return (
     <>
       <PopupState variant="popover" style={{ width: '50px' }}>
