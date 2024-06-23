@@ -28,7 +28,7 @@ export const productsSlice = createSlice({
 
 export const { replaceCategory, fetchProducts } = productsSlice.actions;
 
-export const changeCategory = (category, getState) => async (dispatch) => {
+export const changeCategory = (category) => async (dispatch, getState) => {
   const state = getState();
 
   const filteredProducts = filterProducts(state, category);
