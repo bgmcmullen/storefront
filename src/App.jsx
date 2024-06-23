@@ -1,14 +1,16 @@
-import Header from './Components/Header';
-import Categories from './Components/Categories';
-import Products from './Components/Products';
-import Footer from './Components/Footer';
+
 import './App.scss';
 import { useEffect } from 'react';
 import { fetchData } from './store/products.jsx';
 import { fetchCart } from './store/cart.jsx';
 import { useDispatch } from 'react-redux';
+import Storefront from './Components/Storefront';
+import Header from './Components/Header';
+import CartPage from './Components/CartPage/index.jsx';
+import { BrowserRouter, Router, Routes, Route } from "react-router-dom";
 
-function App(){
+
+function App() {
 
   const dispatch = useDispatch();
 
@@ -17,12 +19,18 @@ function App(){
     dispatch(fetchCart());
   }, []);
 
-  return(
+  return (
     <>
-    <Header />
-    <Categories />
-    <Products />
-    <Footer />
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Storefront />} />
+          <Route path="cart" element={<CartPage />} />
+        </Routes>
+
+      </BrowserRouter>
+
+
     </>
   );
 }

@@ -40,6 +40,7 @@ export const cartSlice = createSlice({
     DELETE_FROM_CART: (state, action) => {
       let contains = false;
       // check if item is in cart
+
       state.products.map((product) => {
         if (product.name === action.payload.name) {
           contains = true
@@ -48,10 +49,13 @@ export const cartSlice = createSlice({
       if (!contains) {
         return state;
       }
+      state.productCounts[action.payload.name]--
+
       if (state.productCounts[action.payload.name] <= 0) {
+
         state.products = state.products.filter((product) => (product.name !== action.payload.name));
       }
-      state.productCounts[action.payload.name]--
+
       state.totalCost = roundToNearestHundredth(state.totalCost - action.payload.price),
       state.totalItems--
       updateDatabase(JSON.stringify(state));
@@ -112,7 +116,6 @@ export const fetchCart = () => async (dispatch) => {
     const cartResponse = await axios.get(`${URL}/api/v1/cart/`);
     const cart = cartResponse.data[cartResponse.data.length - 1];
 
-    console.log(cart);
 
     dispatch(FETCH_CART(cart));
 

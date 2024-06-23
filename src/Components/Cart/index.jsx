@@ -4,6 +4,7 @@ import Menu from '@mui/material/Menu';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import Typography from '@mui/material/Typography';
 import { addToCart, deleteFromCart } from '../../store/cart.jsx';
+import { Link } from "react-router-dom";
 
 function Cart() {
 
@@ -18,17 +19,19 @@ function Cart() {
   const dispatch = useDispatch();
 
   // referenced chatgpt
-function roundToNearestHundredth(num) {
-  return Math.round(num * 100) / 100;
-}
-
-const handleAddToCart = product => {
-  if(product.inStock - productCounts[product.name] <= 0){
-    alert(`Sorry ${product.name} out of stock.`);
-  } else {
-    dispatch(addToCart(product));
+  function roundToNearestHundredth(num) {
+    return Math.round(num * 100) / 100;
   }
-}
+
+  const handleAddToCart = product => {
+    if (product.inStock - productCounts[product.name] <= 0) {
+      alert(`Sorry ${product.name} out of stock.`);
+    } else {
+      dispatch(addToCart(product));
+    }
+  }
+
+  console.log(productsInCart);
 
   return (
     <>
@@ -57,11 +60,15 @@ const handleAddToCart = product => {
                   </div>
                 );
               })}
-              <h3 style={{paddingLeft: '10px', paddingRight: '10px',}}>Total: $ {cartReducer.totalCost}</h3>
+              <h3 style={{ paddingLeft: '10px', paddingRight: '10px', }}>Total: $ {cartReducer.totalCost}</h3>
+              <Link to="cart">
+                <Button variant="contained" style={{ margin: '5px' }}>Continue To Checkout</Button>
+              </Link>
             </Menu>
           </>
         )}
       </PopupState>
+
       <hr />
     </>
 
