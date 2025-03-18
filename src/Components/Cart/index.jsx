@@ -40,7 +40,7 @@ function Cart() {
               View Cart:  {totalItems} items
             </Button>
             <Menu {...bindMenu(popupState)}>
-              {productsInCart.map((product, index) => {
+              {/* {productsInCart.map((product, index) => {
                 return (
                   <div key={index}>
                     <div key={index} style={{ width: '150px', padding: '5px' }}>
@@ -57,7 +57,7 @@ function Cart() {
                     <hr />
                   </div>
                 );
-              })}
+              })} */}
               <h3 style={{ paddingLeft: '10px', paddingRight: '10px', }}>Total: $ {cartReducer.totalCost}</h3>
               <Link to="cart">
                 <Button variant="contained" style={{ margin: '5px' }}>Continue To Checkout</Button>

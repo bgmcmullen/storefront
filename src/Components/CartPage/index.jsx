@@ -32,7 +32,7 @@ function CartPage() {
             Cart
           </Typography>
           <>
-            {productsInCart.map((product, index) => {
+            {/* {productsInCart.map((product, index) => {
               return (<>
                 <div key={index}>
                   <Typography sx={{ mb: 1.5 }} style={{ margin: 0, display: 'inline-block', width: '80%' }}>
@@ -49,7 +49,7 @@ function CartPage() {
               </>
               );
             }
-            )}
+            )} */}
             <Typography sx={{ mb: 1.5 }} style={{ margin: 0, display: 'inline-block', width: '80%' }}>
             <h3 style={{ paddingLeft: '10px', paddingRight: '10px', }}>Total: $ {cartReducer.totalCost}</h3>
             </Typography>

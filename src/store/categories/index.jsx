@@ -12,11 +12,6 @@ const food = {
 
 const foodCatagories = {electronics, food};
 
-let initialState = {
-  categories: foodCatagories,
-  currentCategory: electronics
-}
-
 
 export const categoriesSlice = createSlice({
   name: 'categories',

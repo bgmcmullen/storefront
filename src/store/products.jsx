@@ -5,9 +5,16 @@ import axios from 'axios';
 
 const filterProducts = (state, category) => {
 
-  const filteredProducts = state.productsReducer.products.filter((product) => product.category === category
-);
-  return filteredProducts;
+  try {
+    const filteredProducts = state.productsReducer.products.filter((product) => product.category === category
+    );
+    return filteredProducts;
+  } catch (e) {
+    console.error(e.message);
+    return [];
+  }
+
+
 }
 
 export const productsSlice = createSlice({
@@ -33,7 +40,7 @@ export const changeCategory = (category) => async (dispatch, getState) => {
 
   const filteredProducts = filterProducts(state, category);
 
-  dispatch( replaceCategory(filteredProducts));
+  dispatch(replaceCategory(filteredProducts));
 }
 
 export const fetchData = () => async (dispatch, getState) => {
@@ -44,7 +51,7 @@ export const fetchData = () => async (dispatch, getState) => {
     const productsResponse = await axios.get(`${URL}/api/v1/products/`);
     const products = productsResponse.data;
 
-    dispatch( fetchProducts(products));
+    dispatch(fetchProducts(products));
   } catch (error) {
     console.error(error);
   }
@@ -53,7 +60,7 @@ export const fetchData = () => async (dispatch, getState) => {
 
   const filteredProducts = filterProducts(state, 'electronics');
 
-  dispatch( replaceCategory(filteredProducts));
+  dispatch(replaceCategory(filteredProducts));
 }
 
 export default productsSlice.reducer;

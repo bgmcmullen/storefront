@@ -79,7 +79,7 @@ function Products() {
                     $ {product.price}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    In Stock: {productCounts[product.name] ? (product.inStock - productCounts[product.name]) : product.inStock}
+                    {/* In Stock: {productCounts[product.name] ? (product.inStock - productCounts[product.name]) : product.inStock} */}
                   </Typography>
                   <Button style={{fontSize:'20px'}} onClick={() => handleAddToCart(product)}>Add to Cart</Button>
                 </CardContent>
@@ -119,7 +119,7 @@ function Products() {
                     {selectedProduct.info}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    In Stock: {productCounts[selectedProduct.name] ? (selectedProduct.inStock - productCounts[selectedProduct.name]) : selectedProduct.inStock}
+                    {/* In Stock: {productCounts[selectedProduct.name] ? (selectedProduct.inStock - productCounts[selectedProduct.name]) : selectedProduct.inStock} */}
                   </Typography>
                   <Button style={{fontSize:'20px'}} onClick={() => handleAddToCart(selectedProduct)}>Add to Cart</Button>
                 </CardContent>
