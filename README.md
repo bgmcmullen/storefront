@@ -1,4 +1,4 @@
-# storefront
+# storefron
 
 **Author**: Brendan McMullen
 **Version**: 1.0.1
